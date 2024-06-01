@@ -92,6 +92,9 @@ class TransactionController extends Controller
         $user=User::find($userConnected);
         $brancheId=$user->branche->BrancheId;
         $userTypeId=$user->userType->UserTypeId;
+        $dateWithoutTime = date('Y-m-d', strtotime($request->DateMovemented));
+        $dateCreated = now();
+        $dateCreated = $dateCreated->format('Y-m-d');
        
         
         Transaction::create([
@@ -103,8 +106,8 @@ class TransactionController extends Controller
             'Number'=>$request->Number,
             'Amount'=>$request->Amount,
             'Note'=>$request->Note,
-            'DateCreated'=>now(),
-            'DateMovemented'=>$request->DateMovemented
+            'DateCreated'=>$dateCreated,
+            'DateMovemented'=>$dateWithoutTime
         ]);
          
         return response()->json([
