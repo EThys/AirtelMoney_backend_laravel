@@ -23,7 +23,6 @@ return new class extends Migration
             $table->longText('Note')->nullable();
             $table->string('Response')->nullable();
             $table->boolean('Sent')->default(false);
-            $table->string("DateCreated")->nullable();
             $table->string("DateMovemented")->nullable();
           
         });

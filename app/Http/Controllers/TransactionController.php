@@ -20,12 +20,24 @@ class TransactionController extends Controller
         //   return response()->json($usersType);
     }
 
-    public function transactionByCurrency($currencyCode, $perPage = 10) {
+    public function transactionByCurrency($currencyCode, $perPage = 20) {
 
-        $transactions = Transaction::join('TCurrencies', 'TTransactions.CurrencyFId', '=', 'CurrencyId')
+        $userId = auth()->user()->UserId;
+        
+        $admin = auth()->user()->Admin;
+    
+        if($admin == 0){
+            $transactions = Transaction::join('TCurrencies', 'TTransactions.CurrencyFId', '=', 'CurrencyId')
           ->where('TCurrencies.CurrencyCode', $currencyCode)
           ->with('userType','currency','user',"branche")
           ->orderBy('TransactionId', 'desc');
+        }else{
+            $transactions = Transaction::join('TCurrencies', 'TTransactions.CurrencyFId', '=', 'CurrencyId')
+        ->where('TCurrencies.CurrencyCode', $currencyCode)
+        ->where('TTransactions.UserFId', $userId)
+        ->with('userType', 'currency', 'user', "branche")
+        ->orderBy('TransactionId', 'desc');
+        }
       
         // Add pagination
         $paginated = $transactions->paginate($perPage);
@@ -67,7 +79,6 @@ class TransactionController extends Controller
             'BrancheFId'=>'required',
             'UserTypeFId'=>'required',
             'Amount'=>'required|integer',
-            'DateMovemented'=>'required',
             'Note'=>'nullable|string',
             'Response'=>'nullable|string'
             
@@ -92,9 +103,8 @@ class TransactionController extends Controller
         $user=User::find($userConnected);
         $brancheId=$user->branche->BrancheId;
         $userTypeId=$user->userType->UserTypeId;
-        $dateWithoutTime = date('Y-m-d', strtotime($request->DateMovemented));
-        $dateCreated = now();
-        $dateCreated = $dateCreated->format('Y-m-d');
+        $dateMovemented = now();
+        $dateMovemented = $dateMovemented->format('Y-m-d');
        
         
         Transaction::create([
@@ -106,8 +116,7 @@ class TransactionController extends Controller
             'Number'=>$request->Number,
             'Amount'=>$request->Amount,
             'Note'=>$request->Note,
-            'DateCreated'=>$dateCreated,
-            'DateMovemented'=>$dateWithoutTime
+            'DateMovemented'=>$dateMovemented ,
         ]);
          
         return response()->json([
@@ -136,6 +145,14 @@ class TransactionController extends Controller
         if(strlen($request->Number) !== 10){
              return response()->json(['error' => 'Entrer un numero valide']);
         }
+
+        // Récupérer la nouvelle valeur de FromBranchId
+        $newFromBranchId = $request->input('FromBranchId');
+
+        // Mettre à jour BrancheFId dans users
+        // User::where('UserId', $transaction->UserFId)
+        //     ->update(['BrancheFId' => $newFromBranchId]);
+
         $transaction->update($request->all());
         return response()->json([
             'status'=>201,

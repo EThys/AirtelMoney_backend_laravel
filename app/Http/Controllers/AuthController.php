@@ -30,7 +30,9 @@ class AuthController extends Controller
               'errors'=>$validatedData->errors()
             ],400);
         }
-        $user = User::where('UserName', $request->UserName)->first();
+        $user = User::with('branche') // Eager load the 'branch' relationship
+                   ->where('UserName', $request->UserName)
+                   ->first();
 
         if(!$user){
             return response()->json([
@@ -60,6 +62,7 @@ class AuthController extends Controller
             "UserTypeFId"=>'required',
             "UserName"=>'required|unique:TUsers',
             "Password"=>'required',
+            "Admin"=>'required'
         ]);
 
         if($validatedData->fails()){
@@ -69,11 +72,13 @@ class AuthController extends Controller
                 'errors'=>$validatedData->errors()
             ],400);
         }
+
         $user=User::create([
             'BrancheFId'=>$request->BrancheFId,
             'UserTypeFId'=>$request->UserTypeFId,
             'UserName'=>$request->UserName,
-            'Password'=>bcrypt($request->Password)
+            'Password'=>bcrypt($request->Password),
+            'Admin'=>$request->Admin
 
         ]);
         return response()->json([

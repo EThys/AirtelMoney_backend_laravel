@@ -40,12 +40,4 @@ class Transaction extends Model
     public function userType(){
         return $this->belongsTo(UserType::class,'UserTypeFId');
     }
-    protected $casts = [
-        'send' => 'boolean'
-      ];
-      
-      public function setSentAttribute($value)
-      {
-        $this->attributes['send'] = $value ? 'oui' : 'non';
-      }
 }

@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('BrancheFId');
             $table->unsignedBigInteger('UserTypeFId');
             $table->string('UserName');
+            $table->boolean('Admin')->default(false);  
             $table->string('Password');
-            $table->boolean("Admin")->default(false);
             $table->rememberToken();
         });
 
