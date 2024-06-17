@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\PhoneTypes;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -66,10 +67,25 @@ class TransactionController extends Controller
     public function store(Request $request){
 
         function validateNumberFormat($number) {
+            // Vérifie les premiers caractères du numéro
             $validateNumber = substr($number, 0, 3);
-            return in_array($validateNumber, ['099', '097']);
-        }
         
+            // Vérifie si le numéro commence par '099' ou '097'
+            if (in_array($validateNumber, ['099', '097'])) {
+                return true;
+            }
+        
+            // Vérifie à nouveau les premiers caractères mais seulement les deux premiers cette fois-ci
+            $validateNumber = substr($number, 0, 2);
+        
+            // Vérifie si le numéro commence par '99' ou '97'
+            if (in_array($validateNumber, ['99', '97'])) {
+                return true;
+            }
+        
+            // Si aucune des conditions précédentes n'est remplie, retourne false
+            return false;
+        }
 
         $validatedData=Validator::make($request->all(),
         [
@@ -95,7 +111,7 @@ class TransactionController extends Controller
         if(!validateNumberFormat($request->Number)) {
            return response()->json(['error' => 'Le numero saisi n\'est pas un numero airtel']);
         }
-        if(strlen($request->Number) !== 10){
+        if(strlen($request->Number) !== 10 && strlen($request->Number) !== 9){
             return response()->json(['error' => 'Entrer un numero valide']);
         }
          
@@ -105,6 +121,15 @@ class TransactionController extends Controller
         $userTypeId=$user->userType->UserTypeId;
         $dateMovemented = now();
         $dateMovemented = $dateMovemented->format('Y-m-d');
+        $phoneNumber=$request->Number;
+        $phoneType = PhoneTypes::where('PhoneNumber', $phoneNumber)->first();
+        $userType="";
+        if($phoneType){
+            $userType = $phoneType->userType->UserTypeName;
+        }
+        
+        
+
        
         
         Transaction::create([
@@ -116,7 +141,7 @@ class TransactionController extends Controller
             'Number'=>$request->Number,
             'Amount'=>$request->Amount,
             'Note'=>$request->Note,
-            'DateMovemented'=>$dateMovemented ,
+            'DateMovemented'=>$dateMovemented,
         ]);
          
         return response()->json([

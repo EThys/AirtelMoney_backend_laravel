@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrancheController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\PhoneTypeController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserTypeController;
 
@@ -44,6 +45,10 @@ Route::group(['middleware'=>["auth:sanctum"]],function(){
 
     //UserRoute
     Route::get('user/allUsers',[AuthController::class, 'allUsers']);
+
+     //PhoneTypeRoute
+    Route::post('phoneType/create',[PhoneTypeController::class, 'store']);
+    Route::get('/phoneTypes',[PhoneTypeController::class, 'index']);
 
     //AuthRoute
     Route::get('/logout',[AuthController::class, 'logout']);
