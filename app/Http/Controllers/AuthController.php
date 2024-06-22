@@ -36,12 +36,12 @@ class AuthController extends Controller
 
         if(!$user){
             return response()->json([
-              'message' => 'Utilisateur inconnu' 
+              'message' => 'unknown user' 
             ],400);
         }
         if(!Hash::check($request->Password, $user->Password)){
             return response()->json([
-              'message' => 'Mot de passe incorrect'
+              'message' => 'Incorrect password'
             ],400);
           }
           

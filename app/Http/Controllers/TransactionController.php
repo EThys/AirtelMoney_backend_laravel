@@ -104,15 +104,15 @@ class TransactionController extends Controller
             return response()->json(
                 [
                     'status'=>400,
-                    'message'=>'Une erreur est survenue',
+                    'message'=>'fill in the required fields',
                     'errors'=>$validatedData->errors()
                 ]);
         }
         if(!validateNumberFormat($request->Number)) {
-           return response()->json(['error' => 'Le numero saisi n\'est pas un numero airtel']);
+           return response()->json(['error' => 'The number entered is not an airtel number']);
         }
         if(strlen($request->Number) !== 10 && strlen($request->Number) !== 9){
-            return response()->json(['error' => 'Entrer un numero valide']);
+            return response()->json(['error' => 'Enter a valid number']);
         }
          
         $userConnected=auth()->user()->UserId;
@@ -128,10 +128,6 @@ class TransactionController extends Controller
             $userType = $phoneType->userType->UserTypeName;
         }
         
-        
-
-       
-        
         Transaction::create([
             'UserFId' => $userConnected,
             'BrancheFId' => $request->BrancheFId,
@@ -146,7 +142,7 @@ class TransactionController extends Controller
          
         return response()->json([
             'status'=>200,
-            'message'=>"Demande envoyée",
+            'message'=>"Request sent",
         ],200);
         
     }
@@ -165,10 +161,10 @@ class TransactionController extends Controller
         $transaction=Transaction::find($id);
 
         if(!validatedNumberFormat($request->Number)) {
-            return response()->json(['error' => 'Ceci n\'est pas un numero airtel']);
+            return response()->json(['error' => 'The number entered is not an airtel number']);
         }
         if(strlen($request->Number) !== 10){
-             return response()->json(['error' => 'Entrer un numero valide']);
+             return response()->json(['error' => 'Enter a valid number']);
         }
 
         // Récupérer la nouvelle valeur de FromBranchId
@@ -181,14 +177,14 @@ class TransactionController extends Controller
         $transaction->update($request->all());
         return response()->json([
             'status'=>201,
-            'message'=>'Modification reussie'
+            'message'=>'Edit successful'
         ]);
 
     }
     public function destroy(string $id){
         $transaction=Transaction::find($id);
         $transaction->delete();
-        return response()->json(['message'=>"Suppression reussie"],200);
+        return response()->json(['message'=>"Delete successful"],200);
     }
 
 }
