@@ -155,8 +155,24 @@ class TransactionController extends Controller
     public function update(Request $request, string $id){
 
         function validatedNumberFormat($number) {
+            // Vérifie les premiers caractères du numéro
             $validateNumber = substr($number, 0, 3);
-            return in_array($validateNumber, ['099', '097']);
+        
+            // Vérifie si le numéro commence par '099' ou '097'
+            if (in_array($validateNumber, ['099', '097'])) {
+                return true;
+            }
+        
+            // Vérifie à nouveau les premiers caractères mais seulement les deux premiers cette fois-ci
+            $validateNumber = substr($number, 0, 2);
+        
+            // Vérifie si le numéro commence par '99' ou '97'
+            if (in_array($validateNumber, ['99', '97'])) {
+                return true;
+            }
+        
+            // Si aucune des conditions précédentes n'est remplie, retourne false
+            return false;
         }
         $transaction=Transaction::find($id);
 
@@ -166,13 +182,6 @@ class TransactionController extends Controller
         if(strlen($request->Number) !== 10){
              return response()->json(['error' => 'Enter a valid number']);
         }
-
-        // Récupérer la nouvelle valeur de FromBranchId
-        $newFromBranchId = $request->input('FromBranchId');
-
-        // Mettre à jour BrancheFId dans users
-        // User::where('UserId', $transaction->UserFId)
-        //     ->update(['BrancheFId' => $newFromBranchId]);
 
         $transaction->update($request->all());
         return response()->json([
