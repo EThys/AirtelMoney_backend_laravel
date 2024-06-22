@@ -30,7 +30,7 @@ class AuthController extends Controller
               'errors'=>$validatedData->errors()
             ],400);
         }
-        $user = User::with('branche') // Eager load the 'branch' relationship
+        $user = User::with('branche') 
                    ->where('UserName', $request->UserName)
                    ->first();
 
@@ -72,6 +72,11 @@ class AuthController extends Controller
                 'errors'=>$validatedData->errors()
             ],400);
         }
+
+        return response()->json([
+            'status'=>200,
+            'message'=>$request->input('Admin')
+],200);
 
         $user=User::create([
             'BrancheFId'=>$request->BrancheFId,
