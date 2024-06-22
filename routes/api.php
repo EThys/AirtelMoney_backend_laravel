@@ -13,7 +13,7 @@ use App\Http\Controllers\UserTypeController;
 
 Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login',[AuthController::class, 'login']);
-Route::group(['middleware'=>["auth:sanctum"],"cors"],function(){
+Route::group(['middleware'=>["auth:sanctum"]],function(){
     //BrancheRoute
     Route::post('/branche',[BrancheController::class, 'store']);
     Route::put('/branche/{branche}',[BrancheController::class, 'update']);
