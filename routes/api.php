@@ -32,7 +32,7 @@ Route::group(['middleware'=>["auth:sanctum"]],function(){
     Route::get('/transaction/{transaction}',[TransactionController::class, 'show']);
     Route::get('/transactions',[TransactionController::class, 'index']);
     Route::get('/transactions/currency/{currencyCode}',[TransactionController::class, 'transactionByCurrency']);
-    Route::delete('/transaction/{transaction}',[TransactionController::class, 'destroy']);
+    Route::post('/transactionDelete/{transaction}',[TransactionController::class, 'destroy']);
     Route::post('/transaction',[TransactionController::class, 'store']);
     Route::post('/transaction/{transaction}',[TransactionController::class, 'update']);
 
