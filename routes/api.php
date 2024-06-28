@@ -34,7 +34,7 @@ Route::group(['middleware'=>["auth:sanctum"]],function(){
     Route::get('/transactions/currency/{currencyCode}',[TransactionController::class, 'transactionByCurrency']);
     Route::delete('/transaction/{transaction}',[TransactionController::class, 'destroy']);
     Route::post('/transaction',[TransactionController::class, 'store']);
-    Route::put('/transaction/{transaction}',[TransactionController::class, 'update']);
+    Route::post('/transaction/{transaction}',[TransactionController::class, 'update']);
 
 
     //CurrencyRoute
