@@ -33,7 +33,7 @@ Route::group(['middleware'=>["auth:sanctum"]],function(){
     Route::get('/transactions',[TransactionController::class, 'index']);
     Route::get('/transactions/currency/{currencyCode}',[TransactionController::class, 'transactionByCurrency']);
     Route::post('/transactionDelete/{transaction}',[TransactionController::class, 'destroy']);
-    Route::post('/transaction',[TransactionController::class, 'store']);
+    Route::post('/transactions',[TransactionController::class, 'store']);
     Route::post('/transaction/{transaction}',[TransactionController::class, 'update']);
 
 

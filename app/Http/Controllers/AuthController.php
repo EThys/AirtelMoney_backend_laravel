@@ -73,11 +73,6 @@ class AuthController extends Controller
             ],400);
         }
 
-        return response()->json([
-            'status'=>200,
-            'message'=>$request->input('Admin')
-],200);
-
         $user=User::create([
             'BrancheFId'=>$request->BrancheFId,
             'UserTypeFId'=>$request->UserTypeFId,
