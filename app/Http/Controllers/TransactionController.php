@@ -21,22 +21,32 @@ class TransactionController extends Controller
         //   return response()->json($usersType);
     }
 
-    public function transactionByCurrency($currencyCode, $perPage = 20) {
+    public function transactionByCurrency(Request $request,$currencyCode, $perPage = 20) {
 
         $userId = auth()->user()->UserId;
         
         $admin = auth()->user()->Admin;
+        $from = $request->from;
+        $to = $request->to;
     
         if($admin == 0){
             $transactions = Transaction::join('TCurrencies', 'TTransactions.CurrencyFId', '=', 'CurrencyId')
           ->where('TCurrencies.CurrencyCode', $currencyCode)
           ->with('userType','currency','user',"branche")
+          ->when($from && $to, function($query) use ($from, $to) {
+            $query->whereRaw("DateMovemented >= ? AND DateMovemented <= ?", array($from, $to));
+          })
+
           ->orderBy('TransactionId', 'desc');
-        }else{
+        }
+        else{
             $transactions = Transaction::join('TCurrencies', 'TTransactions.CurrencyFId', '=', 'CurrencyId')
         ->where('TCurrencies.CurrencyCode', $currencyCode)
         ->where('TTransactions.UserFId', $userId)
         ->with('userType', 'currency', 'user', "branche")
+        ->when($from && $to, function($query) use ($from, $to) {
+            $query->whereRaw("DateMovemented >= ? AND DateMovemented <= ?", array($from, $to));
+          })
         ->orderBy('TransactionId', 'desc');
         }
       
