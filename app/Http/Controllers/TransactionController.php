@@ -81,7 +81,7 @@ class TransactionController extends Controller
             $validateNumber = substr($number, 0, 3);
         
             // Vérifie si le numéro commence par '099' ou '097'
-            if (in_array($validateNumber, ['099', '097'])) {
+            if (in_array($validateNumber, ['099', '097','098'])) {
                 return true;
             }
         
@@ -89,7 +89,7 @@ class TransactionController extends Controller
             $validateNumber = substr($number, 0, 2);
         
             // Vérifie si le numéro commence par '99' ou '97'
-            if (in_array($validateNumber, ['99', '97'])) {
+            if (in_array($validateNumber, ['99', '97','98'])) {
                 return true;
             }
         
@@ -169,7 +169,7 @@ class TransactionController extends Controller
             $validateNumber = substr($number, 0, 3);
         
             // Vérifie si le numéro commence par '099' ou '097'
-            if (in_array($validateNumber, ['099', '097'])) {
+            if (in_array($validateNumber, ['099', '097','098'])) {
                 return true;
             }
         
@@ -177,7 +177,7 @@ class TransactionController extends Controller
             $validateNumber = substr($number, 0, 2);
         
             // Vérifie si le numéro commence par '99' ou '97'
-            if (in_array($validateNumber, ['99', '97'])) {
+            if (in_array($validateNumber, ['99', '97','98'])) {
                 return true;
             }
         
