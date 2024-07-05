@@ -8,6 +8,9 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\TransactionCollection;
+use App\Models\Branche;
+use App\Models\Currency;
+use App\Models\UserType;
 
 class TransactionController extends Controller
 {
@@ -75,7 +78,7 @@ class TransactionController extends Controller
     
 
     public function store(Request $request){
-
+        
         function validateNumberFormat($number) {
             // Vérifie les premiers caractères du numéro
             $validateNumber = substr($number, 0, 3);
@@ -96,7 +99,7 @@ class TransactionController extends Controller
             // Si aucune des conditions précédentes n'est remplie, retourne false
             return false;
         }
-
+        $data = [];
         $validatedData=Validator::make($request->all(),
         [
             
@@ -138,7 +141,7 @@ class TransactionController extends Controller
             $userType = $phoneType->userType->UserTypeName;
         }
         
-        Transaction::create([
+       $transa = Transaction::create([
             'UserFId' => $userConnected,
             'BrancheFId' => $request->BrancheFId,
             'UserTypeFId'=>$request->UserTypeFId,
@@ -149,10 +152,18 @@ class TransactionController extends Controller
             'Note'=>$request->Note,
             'DateMovemented'=>$dateMovemented,
         ]);
-         
+
+        $branch = Branche::find($transa->BrancheFId)->first();
+        $currency = Currency::find($transa->CurrencyFId)->first();
+        $user_type = UserType::find($transa->UserTypeFId)->first();
+        $transa["branche"] =$branch;
+        $transa["user_type"] =$user_type;
+        $transa["currency"] =$currency;
+         $transa;
         return response()->json([
             'status'=>200,
             'message'=>"Request sent",
+            "transactions"=>$transa
         ],200);
         
     }
